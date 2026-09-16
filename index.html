@@ -168,7 +168,7 @@
 
         async function sendWish() {
             let otkogo = document.getElementById('inputOtkogo').value;
-            let text = document.getElementById('inputText'].value;
+            let text = document.getElementById('inputText').value;
 
             if (!text.trim()) {
                 alert('Будь ласка, напишіть текст побажання!');
@@ -182,6 +182,7 @@
             let url = SCRIPT_URL + '?action=addWish&otkogo=' + encodeURIComponent(otkogo) + '&text=' + encodeURIComponent(text);
 
             try {
+                // Використовуємо mode: 'no-cors', щоб запит гарантовано долетів до Google Таблиці
                 await fetch(url, { method: 'GET', mode: 'no-cors' });
 
                 alert('Ваше побажання успішно додано до баночки! 🎉');
