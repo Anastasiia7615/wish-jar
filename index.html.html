@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Банка з побажаннями 💛</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f7f3ed;
+            color: #4a4238;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(#e6ded3 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(110, 95, 78, 0.08);
+            padding: 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #5c4f41;
+            margin-bottom: 8px;
+        }
+
+        p.subtitle {
+            font-size: 14px;
+            color: #8c7d6b;
+            margin-bottom: 24px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            background-color: #f4eee3;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #5c4f41;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .btn:hover {
+            background-color: #ebdccc;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: #8c7d6b;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #756756;
+        }
+
+        /* Листівка / аркуш для побажання */
+        .card-container {
+            perspective: 1000px;
+            margin-top: 20px;
+            min-height: 180px;
+            display: none;
+        }
+
+        .paper-card {
+            background: #fffdf9;
+            border: 2px dashed #d9ccb9;
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(110, 95, 78, 0.06);
+            transform-origin: top;
+            animation: unfold 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            text-align: left;
+        }
+
+        @keyframes unfold {
+            0% {
+                transform: scaleY(0) rotateX(-90deg);
+                opacity: 0;
+            }
+            100% {
+                transform: scaleY(1) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        .paper-text {
+            font-family: 'Caveat', cursive;
+            font-size: 26px;
+            color: #3b332b;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .paper-author {
+            font-size: 13px;
+            color: #a39585;
+            text-align: right;
+            font-style: italic;
+        }
+
+        /* Форма залишення побажання */
+        .form-container {
+            display: none;
+            text-align: left;
+            margin-top: 15px;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6e5f4e;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d9ccb9;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            background: #fffdf9;
+            color: #4a4238;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #8c7d6b;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #8c7d6b;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 12px;
+            text-decoration: underline;
+        }
+
+        .loading {
+            font-size: 15px;
+            color: #8c7d6b;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Віртуальна баночка</h1>
+        <p class="subtitle">Теплі слова, жарти та приємні побажання</p>
+
+        <!-- Головне меню -->
+        <div id="mainMenu" class="btn-group">
+            <button class="btn btn-primary" onclick="getRandomWish()">✨ Витягнути побажання</button>
+            <button class="btn" onclick="showForm()">✍️ Залишити побажання</button>
+        </div>
+
+        <!-- Завантаження -->
+        <div id="loading" class="loading">Хвилинку, дістаємо записочку... 🪄</div>
+
+        <!-- Блок з витягнутим побажанням -->
+        <div id="cardContainer" class="card-container">
+            <div class="paper-card">
+                <div id="paperText" class="paper-text">Тут буде текст побажання...</div>
+                <div id="paperAuthor" class="paper-author">Від кого</div>
+            </div>
+            <button class="btn" style="margin-top: 16px; width: 100%;" onclick="resetView()">← Назад до меню</button>
+        </div>
+
+        <!-- Форма для відправки -->
+        <div id="formContainer" class="form-container">
+            <div class="form-group">
+                <label>Кому (залиште порожнім або напишіть «Для всіх»):</label>
+                <input type="text" id="inputKomu" class="form-control" placeholder="Наприклад: Всім або Олені">
+            </div>
+            <div class="form-group">
+                <label>Ваше ім'я (або «Анонім»):</label>
+                <input type="text" id="inputOtkogo" class="form-control" placeholder="Як вас підписати?">
+            </div>
+            <div class="form-group">
+                <label>Повідомлення:</label>
+                <textarea id="inputText" class="form-control" placeholder="Напишіть щось приємне..."></textarea>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="sendWish()">Надіслати в баночку 💛</button>
+            <center><button class="back-btn" onclick="resetView()">Скасувати</button></center>
+        </div>
+    </div>
+
+    <script>
+        // Вставте сюди скопійоване посилання на ваш веб-додаток Google Apps Script:
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbvTP-D-JvSBUYjilK54kl8cYAjt9uflVDKN-9GRqHR8q4NY8pJbn2qzJpUaugefPF8/exec";
+
+        function showForm() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('cardContainer').style.display = 'none';
+            document.getElementById('formContainer').style.display = 'block';
+        }
+
+        function resetView() {
+            document.getElementById('mainMenu').style.display = 'flex';
+            document.getElementById('cardContainer').style.display = 'none';
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        async function getRandomWish() {
+            document.getElementById('mainMenu').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                let response = await fetch(SCRIPT_URL + '?action=getData');
+                let data = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+
+                if (!data || data.length === 0) {
+                    alert('Баночка поки порожня! Додайте перше побажання.');
+                    resetView();
+                    return;
+                }
+
+                // Вибираємо рандомний рядок
+                let randomRow = data[Math.floor(Math.random() * data.length)];
+                
+                // Колонки: [0] - Кому, [1] - Від кого, [2] - Текст
+                let komu = randomRow[0] || "Для всіх";
+                let otkogo = randomRow[1] || "Анонім";
+                let text = randomRow[2] || "Тепле побажання";
+
+                document.getElementById('paperText').innerText = `«${text}»`;
+                document.getElementById('paperAuthor').innerText = `Кому: ${komu} | Від: ${otkogo}`;
+                
+                document.getElementById('cardContainer').style.display = 'block';
+            } catch (error) {
+                console.error(error);
+                alert('Сталася помилка при завантаженні. Спробуйте ще раз!');
+                resetView();
+            }
+        }
+
+        async function sendWish() {
+            let komu = document.getElementById('inputKomu').value;
+            let otkogo = document.getElementById('inputOtkogo').value;
+            let text = document.getElementById('inputText').value;
+
+            if (!text.trim()) {
+                alert('Будь ласка, напишіть текст побажання!');
+                return;
+            }
+
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading').innerText = 'Відправляємо записочку в баночку... 💌';
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ komu: komu, otkogo: otkogo, text: text })
+                });
+
+                alert('Ваше побажання успішно додано до баночки! 🎉');
+                document.getElementById('inputKomu').value = '';
+                document.getElementById('inputOtkogo').value = '';
+                document.getElementById('inputText').value = '';
+                resetView();
+            } catch (error) {
+                console.error(error);
+                alert('Не вдалося надіслати. Перевірте з'єднання.');
+                resetView();
+            }
+        }
+    </script>
+</body>
+</html>
