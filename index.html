@@ -113,7 +113,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgNZM6Zx8y7x9SF3M9fHGvDHIv9dVqt_PRYJFQMTyewgj7EfRTMlYusbC11C1wgc9z/exec";
+        const SCRIPT_URL ="https://script.google.com/macros/s/AKfycbzyi7o_2yefwvTkzu_F3oWuamSKW1uq6O-sxPMm19eiwOD-lcCiAuJ6zAMpUTJcBf6O/exec";
 
         function showForm() {
             document.getElementById('mainMenu').style.display = 'none';
@@ -144,7 +144,6 @@
                     return;
                 }
 
-                // Вибираємо випадковий рядок з таблиці
                 let randomRow = data[Math.floor(Math.random() * data.length)];
                 let text = Array.isArray(randomRow) ? randomRow[0] : randomRow;
 
