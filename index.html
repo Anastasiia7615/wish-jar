@@ -243,7 +243,7 @@
     </div>
 
     <script>
-        // Актуальне посилання на веб-додаток Google Apps Script
+        // Ваше актуальне посилання на веб-додаток Google Apps Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiG5Xsz8bRx-FYIw6Vj7gcBq0-nFkoYhXMJU-c-d07kkmLUSGBzL1opbttpcjBlf5k/exec";
 
         function showForm() {
@@ -306,7 +306,6 @@
             document.getElementById('loading').style.display = 'block';
             document.getElementById('loading').innerText = 'Відправляємо записочку в баночку... 💌';
 
-            // Використовуємо GET-запит через параметри URL, щоб надійно обійти будь-які блокування CORS у браузерах
             let url = SCRIPT_URL + '?action=addWish&komu=' + encodeURIComponent(komu) + '&otkogo=' + encodeURIComponent(otkogo) + '&text=' + encodeURIComponent(text);
 
             try {
